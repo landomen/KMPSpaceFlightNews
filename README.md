@@ -24,8 +24,11 @@ The app demonstrates the following features:
 - and opening the system share sheet.
 
 
+### Current state of the app
 <img src="/screenshots/final_combined.png" />
 
+
+### Final app (once all articles are released)
 <img src="/screenshots/final_app_gif.gif" />
 
 
