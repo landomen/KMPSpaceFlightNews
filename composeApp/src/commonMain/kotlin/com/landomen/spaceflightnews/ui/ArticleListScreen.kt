@@ -3,6 +3,7 @@ package com.landomen.spaceflightnews.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,8 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.landomen.spaceflightnews.model.Article
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -91,40 +94,55 @@ private fun ArticleItem(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxSize().padding(16.dp)
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text(
-                text = article.title,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
+            AsyncImage(
+                model = article.imageUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f),
             )
 
-            Text(
-                text = article.summary,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxSize().padding(16.dp)
+            ) {
+                Text(
+                    text = article.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
 
-            Text(
-                text = article.publishedAt.toLocalDateTime(TimeZone.currentSystemDefault()).format(
-                    LocalDateTime.Format {
-                        year()
-                        char('-')
-                        monthNumber()
-                        char('-')
-                        dayOfMonth()
+                Text(
+                    text = article.summary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
 
-                        chars(" at ")
+                Text(
+                    text = article.publishedAt.toLocalDateTime(TimeZone.currentSystemDefault())
+                        .format(
+                            LocalDateTime.Format {
+                                year()
+                                char('-')
+                                monthNumber()
+                                char('-')
+                                dayOfMonth()
 
-                        hour()
-                        char(':')
-                        minute()
-                    }),
-                style = MaterialTheme.typography.bodySmall,
-            )
+                                chars(" at ")
+
+                                hour()
+                                char(':')
+                                minute()
+                            }),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
         }
     }
 }
