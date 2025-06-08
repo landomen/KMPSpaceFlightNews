@@ -8,10 +8,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.landomen.spaceflightnews.di.koinConfig
 import com.landomen.spaceflightnews.ui.ArticleListScreen
 import com.landomen.spaceflightnews.ui.theme.AppTheme
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.KoinApplication
 import spaceflightnews.composeapp.generated.resources.Res
 import spaceflightnews.composeapp.generated.resources.app_name
 
@@ -20,18 +22,20 @@ import spaceflightnews.composeapp.generated.resources.app_name
 @Composable
 @Preview
 fun App() {
-    AppTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(Res.string.app_name))
-                    }
-                )
-            }
-        ) { innerPadding ->
-            Box(modifier = Modifier.padding(innerPadding)) {
-                ArticleListScreen()
+    KoinApplication(koinConfig) {
+        AppTheme {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(text = stringResource(Res.string.app_name))
+                        }
+                    )
+                }
+            ) { innerPadding ->
+                Box(modifier = Modifier.padding(innerPadding)) {
+                    ArticleListScreen()
+                }
             }
         }
     }
