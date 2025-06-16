@@ -14,8 +14,13 @@ class ArticleListViewModel(private val apiService: ApiService) : ViewModel() {
     val state: StateFlow<ArticleListViewState> = _state
 
     init {
+        fetchArticles()
+    }
+
+    fun fetchArticles() {
         viewModelScope.launch {
             try {
+                _state.value = _state.value.copy(error = null) // Clear previous error
                 val articles = apiService.getArticles()
                 _state.value = _state.value.copy(
                     articles = articles.filter { it.imageUrl.isNotEmpty() }
@@ -28,6 +33,7 @@ class ArticleListViewModel(private val apiService: ApiService) : ViewModel() {
         }
     }
 }
+
 
 
 data class ArticleListViewState(
