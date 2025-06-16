@@ -1,6 +1,7 @@
 package com.landomen.spaceflightnews.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -14,18 +15,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import coil3.compose.AsyncImage
 import com.landomen.spaceflightnews.model.Article
+import com.landomen.spaceflightnews.network.ApiService
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.io.IOException
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -33,10 +43,25 @@ internal fun ArticleListScreen() {
     val viewModel = koinViewModel<ArticleListViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    ArticleListContent(
-        articles = state.articles,
-    )
+    Box(modifier = Modifier.fillMaxSize()) {
+        ArticleListContent(
+            articles = state.articles,
+        )
+
+        // Show error message if there's one
+        state.error?.let { errorMessage ->
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(16.dp)
+            )
+        }
+    }
 }
+
 
 @Composable
 private fun ArticleListContent(
