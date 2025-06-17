@@ -26,6 +26,7 @@ import coil3.compose.AsyncImage
 import com.landomen.spaceflightnews.model.Article
 import kotlinx.datetime.LocalDateTime
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
@@ -38,28 +39,36 @@ internal fun ArticleListScreen() {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        ArticleListContent(articles = state.articles)
+        when (state) {
+            is ArticleListViewState.Loading -> {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
 
-        state.error?.let { errorMessage ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                Text(
-                    text = errorMessage,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(16.dp)
-                )
+            is ArticleListViewState.Success -> {
+                val articles = (state as ArticleListViewState.Success).articles
+                ArticleListContent(articles = articles)
+            }
 
-                Button(onClick = { viewModel.fetchArticles() }) {
-                    Text("Retry")
+            is ArticleListViewState.Error -> {
+                val error = (state as ArticleListViewState.Error).message ?: "Unknown error"
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    Text(
+                        text = error,
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    Button(onClick = { viewModel.fetchArticles() }) {
+                        Text("Retry")
+                    }
                 }
             }
         }
     }
 }
-
 
 
 @Composable

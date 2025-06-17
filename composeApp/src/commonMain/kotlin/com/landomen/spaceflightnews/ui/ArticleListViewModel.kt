@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.io.IOException
 
 class ArticleListViewModel(private val apiService: ApiService) : ViewModel() {
-    private val _state = MutableStateFlow(ArticleListViewState())
+    private val _state = MutableStateFlow<ArticleListViewState>(ArticleListViewState.Loading)
     val state: StateFlow<ArticleListViewState> = _state
 
     init {
@@ -19,24 +19,23 @@ class ArticleListViewModel(private val apiService: ApiService) : ViewModel() {
 
     fun fetchArticles() {
         viewModelScope.launch {
+            _state.value = ArticleListViewState.Loading
             try {
-                _state.value = _state.value.copy(error = null) // Clear previous error
                 val articles = apiService.getArticles()
-                _state.value = _state.value.copy(
-                    articles = articles.filter { it.imageUrl.isNotEmpty() }
-                )
+                    .filter { it.imageUrl.isNotEmpty() }
+                _state.value = ArticleListViewState.Success(articles)
             } catch (e: IOException) {
-                _state.value = _state.value.copy(error = "No internet connection.")
+                _state.value = ArticleListViewState.Error("No internet connection.")
             } catch (e: Exception) {
-                _state.value = _state.value.copy(error = "Something went wrong.")
+                _state.value = ArticleListViewState.Error("Something went wrong.")
             }
         }
     }
 }
 
 
-
-data class ArticleListViewState(
-    val articles: List<Article> = emptyList(),
-    val error: String? = null
-)
+sealed interface ArticleListViewState {
+    data object Loading : ArticleListViewState
+    data class Success(val articles: List<Article> = emptyList()) : ArticleListViewState
+    data class Error(val message: String? = null) : ArticleListViewState
+}
