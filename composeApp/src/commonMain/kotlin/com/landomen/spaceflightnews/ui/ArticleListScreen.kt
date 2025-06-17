@@ -21,22 +21,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import coil3.compose.AsyncImage
 import com.landomen.spaceflightnews.model.Article
-import com.landomen.spaceflightnews.network.ApiService
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import androidx.compose.material3.Button
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.io.IOException
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
