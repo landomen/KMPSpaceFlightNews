@@ -31,7 +31,11 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import spaceflightnews.composeapp.generated.resources.Res
+import spaceflightnews.composeapp.generated.resources.retry
+import spaceflightnews.composeapp.generated.resources.something_went_wrong
 
 @Composable
 internal fun ArticleListScreen() {
@@ -50,26 +54,24 @@ internal fun ArticleListScreen() {
             }
 
             is ArticleListViewState.Error -> {
-                val error = (state as ArticleListViewState.Error).message ?: "Unknown error"
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.align(Alignment.Center)
                 ) {
                     Text(
-                        text = error,
+                        text = stringResource(Res.string.something_went_wrong),
                         color = Color.Red,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(16.dp)
                     )
                     Button(onClick = { viewModel.fetchArticles() }) {
-                        Text("Retry")
+                        Text(text = stringResource(Res.string.retry))
                     }
                 }
             }
         }
     }
 }
-
 
 @Composable
 private fun ArticleListContent(
