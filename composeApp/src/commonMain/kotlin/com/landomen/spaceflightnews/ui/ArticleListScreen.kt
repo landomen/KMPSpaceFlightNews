@@ -34,7 +34,9 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import spaceflightnews.composeapp.generated.resources.Res
+import spaceflightnews.composeapp.generated.resources.no_internet
 import spaceflightnews.composeapp.generated.resources.retry
+import spaceflightnews.composeapp.generated.resources.server_error
 import spaceflightnews.composeapp.generated.resources.something_went_wrong
 
 @Composable
@@ -43,7 +45,7 @@ internal fun ArticleListScreen() {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        when (state) {
+        when (val currentState = state) {
             is ArticleListViewState.Loading -> {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
@@ -54,12 +56,18 @@ internal fun ArticleListScreen() {
             }
 
             is ArticleListViewState.Error -> {
+                val errorMessage = when (currentState.errorType) {
+                    ErrorType.NoInternet -> stringResource(Res.string.no_internet)
+                    ErrorType.ServerError -> stringResource(Res.string.server_error)
+                    ErrorType.Unknown -> stringResource(Res.string.something_went_wrong)
+                }
+
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.align(Alignment.Center)
                 ) {
                     Text(
-                        text = stringResource(Res.string.something_went_wrong),
+                        text = errorMessage,
                         color = Color.Red,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(16.dp)

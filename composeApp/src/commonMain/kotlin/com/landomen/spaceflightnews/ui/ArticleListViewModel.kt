@@ -2,6 +2,7 @@ package com.landomen.spaceflightnews.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil3.network.HttpException
 import com.landomen.spaceflightnews.model.Article
 import com.landomen.spaceflightnews.network.ApiService
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,18 +26,25 @@ class ArticleListViewModel(private val apiService: ApiService) : ViewModel() {
                     .filter { it.imageUrl.isNotEmpty() }
                 _state.value = ArticleListViewState.Success(articles)
             } catch (e: IOException) {
-                _state.value = ArticleListViewState.Error(e.message)
+                _state.value = ArticleListViewState.Error(ErrorType.NoInternet)
+            } catch (e: HttpException) {
+                _state.value = ArticleListViewState.Error(ErrorType.ServerError)
             } catch (e: Exception) {
-                _state.value = ArticleListViewState.Error(e.message)
+                _state.value = ArticleListViewState.Error(ErrorType.Unknown)
             }
         }
     }
+
 }
-
-
 
 sealed interface ArticleListViewState {
     data object Loading : ArticleListViewState
     data class Success(val articles: List<Article> = emptyList()) : ArticleListViewState
-    data class Error(val message: String? = null) : ArticleListViewState
+    data class Error(val errorType: ErrorType) : ArticleListViewState
+}
+
+sealed class ErrorType {
+    data object NoInternet : ErrorType()
+    data object ServerError : ErrorType()
+    data object Unknown : ErrorType()
 }
