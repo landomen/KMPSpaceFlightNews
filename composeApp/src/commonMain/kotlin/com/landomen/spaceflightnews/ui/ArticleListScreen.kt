@@ -51,7 +51,7 @@ internal fun ArticleListScreen() {
             }
 
             is ArticleListViewState.Success -> {
-                val articles = (state as ArticleListViewState.Success).articles
+                val articles = currentState.articles
                 ArticleListContent(articles = articles)
             }
 

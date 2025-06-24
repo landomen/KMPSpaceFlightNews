@@ -25,11 +25,11 @@ class ArticleListViewModel(private val apiService: ApiService) : ViewModel() {
                 val articles = apiService.getArticles()
                     .filter { it.imageUrl.isNotEmpty() }
                 _state.value = ArticleListViewState.Success(articles)
-            } catch (e: IOException) {
+            } catch (_: IOException) {
                 _state.value = ArticleListViewState.Error(ErrorType.NoInternet)
-            } catch (e: HttpException) {
+            } catch (_: HttpException) {
                 _state.value = ArticleListViewState.Error(ErrorType.ServerError)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _state.value = ArticleListViewState.Error(ErrorType.Unknown)
             }
         }
