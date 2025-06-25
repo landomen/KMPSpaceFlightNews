@@ -1,6 +1,7 @@
 package com.landomen.spaceflightnews.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -14,7 +15,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -22,20 +25,60 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.landomen.spaceflightnews.model.Article
 import kotlinx.datetime.LocalDateTime
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import spaceflightnews.composeapp.generated.resources.Res
+import spaceflightnews.composeapp.generated.resources.no_internet
+import spaceflightnews.composeapp.generated.resources.retry
+import spaceflightnews.composeapp.generated.resources.server_error
+import spaceflightnews.composeapp.generated.resources.something_went_wrong
 
 @Composable
 internal fun ArticleListScreen() {
     val viewModel = koinViewModel<ArticleListViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    ArticleListContent(
-        articles = state.articles,
-    )
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (val currentState = state) {
+            is ArticleListViewState.Loading -> {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
+
+            is ArticleListViewState.Success -> {
+                val articles = currentState.articles
+                ArticleListContent(articles = articles)
+            }
+
+            is ArticleListViewState.Error -> {
+                val errorMessage = when (currentState.errorType) {
+                    ErrorType.NoInternet -> stringResource(Res.string.no_internet)
+                    ErrorType.ServerError -> stringResource(Res.string.server_error)
+                    ErrorType.Unknown -> stringResource(Res.string.something_went_wrong)
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    Text(
+                        text = errorMessage,
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    Button(onClick = { viewModel.fetchArticles() }) {
+                        Text(text = stringResource(Res.string.retry))
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable

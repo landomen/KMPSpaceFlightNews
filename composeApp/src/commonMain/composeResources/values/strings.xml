@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Space Flight News</string>
+    <string name="retry">Retry</string>
+    <string name="no_internet">No internet connection. Please check your connection</string>
+    <string name="server_error">Server error. Please try again later</string>
+    <string name="something_went_wrong">Something went wrong. Please try again</string>
 </resources>

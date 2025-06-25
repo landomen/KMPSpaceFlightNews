@@ -2,24 +2,49 @@ package com.landomen.spaceflightnews.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil3.network.HttpException
 import com.landomen.spaceflightnews.model.Article
 import com.landomen.spaceflightnews.network.ApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.io.IOException
 
-class ArticleListViewModel(private val apiService: ApiService) : ViewModel(){
-    private val _state = MutableStateFlow(ArticleListViewState())
+class ArticleListViewModel(private val apiService: ApiService) : ViewModel() {
+    private val _state = MutableStateFlow<ArticleListViewState>(ArticleListViewState.Loading)
     val state: StateFlow<ArticleListViewState> = _state
 
     init {
+        fetchArticles()
+    }
+
+    fun fetchArticles() {
         viewModelScope.launch {
-            val articles = apiService.getArticles()
-            _state.value = _state.value.copy(articles = articles.filter { !it.imageUrl.isEmpty() })
+            _state.value = ArticleListViewState.Loading
+            try {
+                val articles = apiService.getArticles()
+                    .filter { it.imageUrl.isNotEmpty() }
+                _state.value = ArticleListViewState.Success(articles)
+            } catch (_: IOException) {
+                _state.value = ArticleListViewState.Error(ErrorType.NoInternet)
+            } catch (_: HttpException) {
+                _state.value = ArticleListViewState.Error(ErrorType.ServerError)
+            } catch (_: Exception) {
+                _state.value = ArticleListViewState.Error(ErrorType.Unknown)
+            }
         }
     }
+
 }
 
-data class ArticleListViewState(
-    val articles: List<Article> = emptyList(),
-)
+sealed interface ArticleListViewState {
+    data object Loading : ArticleListViewState
+    data class Success(val articles: List<Article> = emptyList()) : ArticleListViewState
+    data class Error(val errorType: ErrorType) : ArticleListViewState
+}
+
+sealed class ErrorType {
+    data object NoInternet : ErrorType()
+    data object ServerError : ErrorType()
+    data object Unknown : ErrorType()
+}
