@@ -1,17 +1,22 @@
 package com.landomen.spaceflightnews.di
 
+import com.landomen.spaceflightnews.data.ArticlesRepository
 import com.landomen.spaceflightnews.network.ApiService
 import com.landomen.spaceflightnews.ui.ArticleListViewModel
+import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
-import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
-val koinConfig: KoinAppDeclaration = {
-    modules(appModule)
-}
-
-private val appModule = module {
+val appModule = module {
     single<ApiService> { ApiService() }
+    single<ArticlesRepository> {
+        ArticlesRepository(
+            databaseDriverFactory = get(),
+            api = get()
+        )
+    }
 
-    viewModel { ArticleListViewModel(apiService = get()) }
+    viewModel { ArticleListViewModel(repository = get()) }
 }
+
+expect val platformModule: Module

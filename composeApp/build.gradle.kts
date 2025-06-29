@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -42,6 +43,8 @@ kotlin {
 
             implementation(libs.koin.android)
             implementation(libs.koin.core)
+
+            implementation(libs.sqldelight.android.driver)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -64,15 +67,20 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel.compose)
 
             implementation(libs.koin.compose.viewmodel)
+
+            implementation(libs.sqldelight.runtime)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.sqldelight.native.driver)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
 
             implementation(libs.ktor.client.java)
+
+            implementation(libs.sqldelight.desktop.driver)
         }
     }
 }
@@ -116,6 +124,14 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.landomen.spaceflightnews"
             packageVersion = "1.0.0"
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("com.landomen.spaceflightnews.cache")
         }
     }
 }

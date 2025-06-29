@@ -1,0 +1,35 @@
+CREATE TABLE Article (
+    id INTEGER NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    url TEXT NOT NULL,
+    imageUrl TEXT NOT NULL,
+    newsSite TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    publishedAt TEXT NOT NULL,
+    updatedAt TEXT NOT NULL
+);
+
+selectNewestArticles:
+SELECT * FROM Article
+ORDER BY id DESC
+LIMIT 10;
+
+selectArticleById:
+SELECT * FROM Article
+WHERE id = ?
+LIMIT 1;
+
+insertOrReplaceArticle:
+INSERT OR REPLACE INTO Article(
+    id,
+    title,
+    url,
+    imageUrl,
+    newsSite,
+    summary,
+    publishedAt,
+    updatedAt
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+removeAllArticles:
+DELETE FROM Article;

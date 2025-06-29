@@ -3,14 +3,14 @@ package com.landomen.spaceflightnews.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil3.network.HttpException
+import com.landomen.spaceflightnews.data.ArticlesRepository
 import com.landomen.spaceflightnews.model.Article
-import com.landomen.spaceflightnews.network.ApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.io.IOException
 
-class ArticleListViewModel(private val apiService: ApiService) : ViewModel() {
+internal class ArticleListViewModel(private val repository: ArticlesRepository) : ViewModel() {
     private val _state = MutableStateFlow<ArticleListViewState>(ArticleListViewState.Loading)
     val state: StateFlow<ArticleListViewState> = _state
 
@@ -22,14 +22,14 @@ class ArticleListViewModel(private val apiService: ApiService) : ViewModel() {
         viewModelScope.launch {
             _state.value = ArticleListViewState.Loading
             try {
-                val articles = apiService.getArticles()
+                val articles = repository.getArticles()
                     .filter { it.imageUrl.isNotEmpty() }
                 _state.value = ArticleListViewState.Success(articles)
             } catch (_: IOException) {
                 _state.value = ArticleListViewState.Error(ErrorType.NoInternet)
             } catch (_: HttpException) {
                 _state.value = ArticleListViewState.Error(ErrorType.ServerError)
-            } catch (_: Exception) {
+            } catch (e: Exception) {
                 _state.value = ArticleListViewState.Error(ErrorType.Unknown)
             }
         }
