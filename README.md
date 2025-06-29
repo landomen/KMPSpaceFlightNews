@@ -17,11 +17,12 @@ This is a companion sample to my series of articles **Building a Space Flight Ne
 The app demonstrates the following features:
 - **building UI with Compose and Material3**,
 - **sharing view models across platforms**,
-- navigating between screens using Navigation Compose,
 - **adding dependency injection using Koin**,
 - **integrating a network layer using Ktor**,
-- integrating a database layer using SQLDelight to support offline mode,
-- **displaying  remote images using Coil**,
+- **integrating a database layer using SQLDelight to support offline mode**,
+- **displaying remote images using Coil**,
+- adding an article details screen,
+- navigating between screens using Navigation Compose,
 - opening an URL in an external web browser,
 - and opening the system share sheet.
 
