@@ -21,13 +21,13 @@ The app demonstrates the following features:
 - **integrating a network layer using Ktor**,
 - **integrating a database layer using SQLDelight to support offline mode**,
 - **displaying remote images using Coil**,
-- adding an article details screen,
-- navigating between screens using Navigation Compose,
+- **adding an article details screen**,
+- **navigating between screens using Navigation Compose**,
 - opening an URL in an external web browser,
 - and opening the system share sheet.
 
 ### Current state of the app
-<img src="/screenshots/part_2_combined.png" />  
+<img src="/screenshots/ios_nav_final.gif" />  
 
 
 ### Final app (once all articles are released)
