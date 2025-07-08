@@ -4,4 +4,7 @@
     <string name="no_internet">No internet connection. Please try again</string>
     <string name="server_error">Server error. Please try again later</string>
     <string name="something_went_wrong">Something went wrong. Please try again</string>
+    <string name="read_more_at">Read full article at %1$s</string>
+    <string name="back_content_description">Back</string>
+    <string name="share_content_description">Share</string>
 </resources>

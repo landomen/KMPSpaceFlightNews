@@ -69,6 +69,9 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
 
             implementation(libs.sqldelight.runtime)
+
+            implementation(libs.androidx.compose.navigation)
+            implementation(libs.androidx.material.icons.extended)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
