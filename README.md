@@ -28,3 +28,7 @@ The app demonstrates the following features:
 
 ### Final app
 <img src="/screenshots/android_final.gif" />
+
+<img src="/screenshots/ios_final.gif" />
+
+<img src="/screenshots/desktop_final.gif" />
