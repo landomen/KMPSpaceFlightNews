@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -53,6 +54,7 @@ internal fun ArticleDetailsScreen(
 ) {
     val viewModel = koinViewModel<ArticleDetailsViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(Unit) {
         viewModel.onFetch(articleId)
@@ -64,11 +66,11 @@ internal fun ArticleDetailsScreen(
             viewModel.onFetch(articleId)
         },
         onBackClick = onBackClick,
-        onShareClick = {
-            // TODO Open share sheet
+        onShareClick = { article ->
+            viewModel.onShareClick(article)
         },
-        onReadMoreClick = {
-            // TODO Open browser
+        onReadMoreClick = { articleUrl ->
+            uriHandler.openUri(articleUrl)
         }
     )
 }
@@ -78,7 +80,7 @@ private fun ArticleDetailsScreenContent(
     state: ArticleDetailsViewModel.ArticleDetailsViewState,
     onRetryClick: () -> Unit,
     onBackClick: () -> Unit,
-    onShareClick: () -> Unit,
+    onShareClick: (Article) -> Unit,
     onReadMoreClick: (String) -> Unit,
 ) {
     Scaffold { innerPadding ->
@@ -112,7 +114,7 @@ private fun ArticleDetailsScreenContent(
 private fun ArticleDetailsSuccessContent(
     article: Article,
     onBackClick: () -> Unit,
-    onShareClick: () -> Unit,
+    onShareClick: (Article) -> Unit,
     onReadMoreClick: (String) -> Unit,
 ) {
     Column(
@@ -137,7 +139,10 @@ private fun ArticleDetailsSuccessContent(
                 )
             }
 
-            IconButton(onClick = onShareClick, modifier = Modifier.align(Alignment.TopEnd)) {
+            IconButton(
+                onClick = { onShareClick(article) },
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
                 Icon(
                     Icons.Default.Share,
                     contentDescription = stringResource(Res.string.share_content_description),

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.landomen.spaceflightnews.data.ArticlesRepository
 import com.landomen.spaceflightnews.model.Article
+import com.landomen.spaceflightnews.share.ShareService
 import com.landomen.spaceflightnews.ui.ErrorType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 
 internal class ArticleDetailsViewModel(
     private val repository: ArticlesRepository,
+    private val shareService: ShareService,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<ArticleDetailsViewState>(ArticleDetailsViewState.Loading)
@@ -31,6 +33,13 @@ internal class ArticleDetailsViewModel(
                 _state.value = ArticleDetailsViewState.Error(ErrorType.Unknown)
             }
         }
+    }
+
+    fun onShareClick(article: Article) {
+        shareService.share(
+            title = article.title,
+            url = article.url
+        )
     }
 
     sealed interface ArticleDetailsViewState {

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SpaceFlightNews</string>
+    <string name="share_title">Share article</string>
+    <string name="share_message">%1$s\n\nRead more: %2$s</string>
 </resources>

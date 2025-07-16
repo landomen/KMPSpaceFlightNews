@@ -18,7 +18,7 @@ val appModule = module {
     }
 
     viewModel { ArticleListViewModel(repository = get()) }
-    viewModel { ArticleDetailsViewModel(repository = get()) }
+    viewModel { ArticleDetailsViewModel(repository = get(), shareService = get()) }
 }
 
 expect val platformModule: Module
