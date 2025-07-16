@@ -27,8 +27,6 @@ The app demonstrates the following features:
 - **and opening the system share sheet.**
 
 ### Final app
-<img src="/screenshots/android_final.gif" />
-
-<img src="/screenshots/ios_final.gif" />
-
-<img src="/screenshots/desktop_final.gif" />
+| Android | iOS | Desktop |
+| -------- | ------- | ------- |
+| <img src="/screenshots/android_final.gif" /> | <img src="/screenshots/ios_final.gif" /> | <img src="/screenshots/desktop_final.gif" /> |
