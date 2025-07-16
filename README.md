@@ -23,12 +23,8 @@ The app demonstrates the following features:
 - **displaying remote images using Coil**,
 - **adding an article details screen**,
 - **navigating between screens using Navigation Compose**,
-- opening an URL in an external web browser,
-- and opening the system share sheet.
+- **opening an URL in an external web browser**,
+- **and opening the system share sheet.**
 
-### Current state of the app
-<img src="/screenshots/ios_nav_final.gif" />  
-
-
-### Final app (once all articles are released)
-<img src="/screenshots/final_app_gif.gif" />
+### Final app
+<img src="/screenshots/android_final.gif" />
